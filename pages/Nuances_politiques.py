@@ -3,6 +3,7 @@ import pandas as pd
 
 import constants
 
+@st.cache_data
 def load_data(url):
     data = pd.read_csv(url)
     return data
