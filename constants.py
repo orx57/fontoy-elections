@@ -19,3 +19,6 @@ SCHEMA_GENERAL_RESULTS_JSON_URL = 'https://www.data.gouv.fr/fr/datasets/r/ced4d2
 
 ### Données des élections agrégées
 SOURCES_URL = 'https://www.data.gouv.fr/fr/datasets/donnees-des-elections-agregees/'
+
+### Table des bureaux de vote du REU
+TABLE_BV_REU_PARQUET_URL = 'https://www.data.gouv.fr/fr/datasets/r/6faacf36-1897-43f5-bf39-af8b41a15d26'
