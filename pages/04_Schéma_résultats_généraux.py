@@ -1,6 +1,5 @@
 import requests
 import streamlit as st
-import pandas as pd
 
 import constants
 
@@ -9,14 +8,10 @@ def load_data(url):
     response = requests.get(url)
     return response.text
 
-def main():
-    st.title("Schéma des résultats généraux")
-    
-    data = load_data(constants.SCHEMA_GENERAL_RESULTS_JSON_URL)
-    st.json(data)
-    
-    st.write("Source de données :")
-    st.write(constants.SOURCES_URL)
+st.title("Schéma des résultats généraux")
 
-if __name__ == "__main__":
-    main()
+data = load_data(constants.SCHEMA_GENERAL_RESULTS_JSON_URL)
+st.json(data)
+
+st.write("Source de données :")
+st.write(constants.SOURCES_URL)

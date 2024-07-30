@@ -1,5 +1,5 @@
-import streamlit as st
 import pandas as pd
+import streamlit as st
 
 import constants
 
@@ -9,14 +9,10 @@ def load_data(url):
     data = pd.read_parquet(url, filters=sel)
     return data
 
-def main():
-    st.title("Résultats généraux")
+st.title("Résultats généraux")
     
-    data = load_data(constants.GENERAL_RESULTS_PARQUET_URL)
-    st.dataframe(data, hide_index=True)
+data = load_data(constants.GENERAL_RESULTS_PARQUET_URL)
+st.dataframe(data, hide_index=True)
 
-    st.write("Source de données :")
-    st.write(constants.SOURCES_URL)
-
-if __name__ == "__main__":
-    main()
+st.write("Source de données :")
+st.write(constants.SOURCES_URL)

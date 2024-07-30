@@ -9,14 +9,10 @@ def load_data(url):
     data = pd.read_parquet(url, filters=sel)
     return data
 
-def main():
-    st.title("Bureaux de vote")
-    
-    data = load_data(constants.TABLE_BV_REU_PARQUET_URL)
-    st.dataframe(data, hide_index=True)
+st.title("Bureaux de vote")
 
-    st.write("Source de données :")
-    st.write(constants.SOURCES_URL)
+data = load_data(constants.TABLE_BV_REU_PARQUET_URL)
+st.dataframe(data, hide_index=True)
 
-if __name__ == "__main__":
-    main()
+st.write("Source de données :")
+st.write(constants.SOURCES_URL)
