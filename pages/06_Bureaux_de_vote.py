@@ -16,10 +16,11 @@ data = load_data(constants.TABLE_BV_REU_PARQUET_URL)
 
 option = st.selectbox(
     'Numéro du bureau de vote :',
-    data['code'].unique(), index=None,
+    sorted(data['code'].unique()), index=None,
     placeholder="Choisir un numéro de bureau de vote")
 
 filtered_df = data[data['code'] == option]
-filtered_df.dropna(axis='columns', how='all', inplace=True)
+filtered_df = filtered_df.dropna(axis='columns', how='all')
 
-st.dataframe(filtered_df, hide_index=True)
+if option:
+    st.dataframe(filtered_df, hide_index=True)

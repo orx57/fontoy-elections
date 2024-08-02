@@ -15,18 +15,19 @@ data = load_data(constants.GENERAL_RESULTS_PARQUET_URL)
 
 option = st.selectbox(
     'Election :',
-    data['id_election'].unique(), index=None,
+    sorted(data['id_election'].unique(), reverse=True), index=None,
     placeholder="Choisir une élection")
 
 filtered_df = data[data['id_election'] == option]
-filtered_df.dropna(axis='columns', how='all', inplace=True)
+filtered_df = filtered_df.dropna(axis='columns', how='all')
 
-st.dataframe(filtered_df, hide_index=True,
-             column_config={'id_election': None,
-                            'id_brut_miom': None,
-                            'Code du département': None,
-                            'Libellé du département': None,
-                            'Code de la commune': None,
-                            'Libellé de la commune': None
-                            }
-            )
+if option:
+    st.dataframe(filtered_df, hide_index=True,
+                column_config={'id_election': None,
+                                'id_brut_miom': None,
+                                'Code du département': None,
+                                'Libellé du département': None,
+                                'Code de la commune': None,
+                                'Libellé de la commune': None
+                                }
+                )
