@@ -12,7 +12,21 @@ def load_data(url):
 st.title("Résultats par candidats")
 
 data = load_data(constants.CANDIDATS_RESULTS_PARQUET_URL)
-st.dataframe(data, hide_index=True)
 
-st.write("Source de données :")
-st.write(constants.SOURCES_URL)
+option = st.selectbox(
+    'Election :',
+    data['id_election'].unique(), index=None,
+    placeholder="Choisir une élection")
+
+filtered_df = data[data['id_election'] == option]
+filtered_df.dropna(axis='columns', how='all', inplace=True)
+
+st.dataframe(filtered_df, hide_index=True,
+             column_config={'id_election': None,
+                            'id_brut_miom': None,
+                            'Code du département': None,
+                            'Libellé du département': None,
+                            'Code de la commune': None,
+                            'Libellé de la commune': None
+                            }
+            )

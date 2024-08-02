@@ -11,8 +11,15 @@ def load_data(url):
 
 st.title("Bureaux de vote")
 
-data = load_data(constants.TABLE_BV_REU_PARQUET_URL)
-st.dataframe(data, hide_index=True)
 
-st.write("Source de données :")
-st.write(constants.SOURCES_URL)
+data = load_data(constants.TABLE_BV_REU_PARQUET_URL)
+
+option = st.selectbox(
+    'Numéro du bureau de vote :',
+    data['code'].unique(), index=None,
+    placeholder="Choisir un numéro de bureau de vote")
+
+filtered_df = data[data['code'] == option]
+filtered_df.dropna(axis='columns', how='all', inplace=True)
+
+st.dataframe(filtered_df, hide_index=True)
