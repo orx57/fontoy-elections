@@ -1,4 +1,5 @@
 import pandas as pd
+import requests
 import streamlit as st
 
 import constants
@@ -8,9 +9,18 @@ rounds_dict = {}
 # Cette fonction est utilisée pour charger les données à partir d'une URL spécifique.
 # Elle utilise un cache pour éviter de recharger les données à chaque fois que le script est exécuté.
 @st.cache_data
-def load_data(url, filters=None):
-    # Chargement des données à partir de l'URL
-    data = pd.read_parquet(url, filters=filters)
+def load_data(url, data_type, filters=None):
+    ## Chargement des données à partir de l'URL basé sur le type de données
+    if data_type == 'csv':
+        data = pd.read_csv(url)
+    elif data_type == 'json':
+        response = requests.get(url)
+        data = response.text
+    elif data_type == 'parquet':
+        data = pd.read_parquet(url, filters=filters)
+    else:
+        raise ValueError(f"Unsupported data type: {data_type}")
+
     return data
 
 # Fonction de formatage personnalisée
@@ -39,14 +49,23 @@ def main():
     # Titre de l'application Streamlit
     st.title("Résultats par candidats")
 
-    # Chargement des données
-    data = load_data(
-        constants.CANDIDATS_RESULTS_PARQUET_URL,
-        filters=[("Code du département", "in", ["57"]), ("Code de la commune", "in", ["226"])]
-        )
+    # Define a dictionary mapping URLs to their data types and filters
+    data_sources = {
+        "general_results": {"url": constants.GENERAL_RESULTS_PARQUET_URL, "data_type": "parquet", "filters": [("Code du département", "in", ["57"]), ("Code de la commune", "in", ["226"])]},
+        "candidats_results": {"url": constants.CANDIDATS_RESULTS_PARQUET_URL, "data_type": "parquet", "filters": [("Code du département", "in", ["57"]), ("Code de la commune", "in", ["226"])]},
+        "nuances": {"url": constants.NUANCES_CSV_URL, "data_type": "csv"},
+        "schema_general_results": {"url": constants.SCHEMA_GENERAL_RESULTS_JSON_URL, "data_type": "json"},
+        "schema_candidats_results": {"url": constants.SCHEMA_CANDIDATS_RESULTS_JSON_URL, "data_type": "json"},
+        "table_bv_reu": {"url": constants.TABLE_BV_REU_PARQUET_URL, "data_type": "parquet", "filters": [("code_commune", "in", ["57226"])]},
+    }
 
+    # Chargement des données
+    data = {}
+    for name, params in data_sources.items():
+        data[name] = load_data(params["url"], params["data_type"], params.get("filters"))
+        
     # Mettre à jour le dictionnaire des tours avec le nombre de tours pour chaque type d'élection et chaque année
-    for option in sorted(data['id_election'].unique(), reverse=True):
+    for option in sorted(data["candidats_results"]['id_election'].unique(), reverse=True):
         parts = option.split("_")
         year, election = parts[0], parts[1]
         round = parts[2] if len(parts) > 2 else None
@@ -57,7 +76,7 @@ def main():
     # Création d'une boîte de sélection pour choisir l'élection
     option = st.selectbox(
         'Election :',
-        sorted(data['id_election'].unique(), reverse=True),
+        sorted(data["candidats_results"]['id_election'].unique(), reverse=True),
         format_func=format_func,
         index=0,
         placeholder="Choisir une élection")
@@ -65,7 +84,7 @@ def main():
     # Si une élection est sélectionnée
     if option:
         # Filtrage des données pour l'élection sélectionnée
-        filtered_df = data.loc[data['id_election'] == option]
+        filtered_df = data["candidats_results"].loc[data["candidats_results"]['id_election'] == option]
         # Suppression des colonnes entièrement vides
         filtered_df = filtered_df.dropna(axis='columns', how='all')
 
