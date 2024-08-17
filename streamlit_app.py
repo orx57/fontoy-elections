@@ -96,6 +96,8 @@ for election_id in sorted(
 
 with st.sidebar:
 
+    st.warning('Application en cours de développement...', icon="⚠️")
+
     st.markdown("## Sélectionnez une élection")
 
     # Création d'une boîte de sélection pour choisir l'élection
@@ -185,7 +187,7 @@ if st.session_state.election_id:
         base = alt.Chart(election_general_data).encode(
             theta=alt.Theta(field="Inscrits", stack=True, type="quantitative"),
             color=alt.Color(
-                field="Code du b\.vote", type="nominal", title="Bureau de vote"
+                field=r"Code du b\.vote", type="nominal", title="Bureau de vote"
             ),
         )
 
@@ -205,7 +207,7 @@ if st.session_state.election_id:
             .mark_bar()
             .encode(
                 alt.X("PercentOfTotal:Q", axis=alt.Axis(format=".0%")),
-                y="Code du b\.vote:N",
+                y=r"Code du b\.vote:N",
             )
         )
 
