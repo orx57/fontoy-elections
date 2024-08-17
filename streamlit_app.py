@@ -306,7 +306,7 @@ st.subheader("A propos de l'application")
 st.markdown(
     """
     Cette application permet d'afficher les **données publiques des élections
-    pour Fontoy**à partir des API de data.gouv.fr.
+    pour Fontoy** à partir des API de data.gouv.fr.
     """
 )
 
