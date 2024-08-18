@@ -35,14 +35,16 @@ loading_functions = {
 
 
 @st.cache_data
-def load_data(url, data_type, filters=None):
-    try:
-        # Use the dictionary to call the appropriate loading function
-        return loading_functions[data_type](url, filters)
-    except KeyError:
-        # Handle unknown data_type
-        raise ValueError(f"Unsupported data type: {data_type}")
-
+def load_data(url, data_type, filters=None, load=False):
+    if load:
+        try:
+            # Use the dictionary to call the appropriate loading function
+            return loading_functions[data_type](url, filters)
+        except KeyError:
+            # Handle unknown data_type
+            raise ValueError(f"Unsupported data type: {data_type}")
+    else:
+        return None
 
 # Fonction de formatage du nom des élections
 
@@ -93,7 +95,7 @@ st.title("Fontoy Élections")
 # Chargement des données
 data = {}
 for name, params in constants.data_sources.items():
-    data[name] = load_data(params["url"], params["data_type"], params.get("filters"))
+    data[name] = load_data(params["url"], params["data_type"], params.get("filters"), params.get("load"))
 
 # Mettre à jour le dictionnaire des tours avec le nombre de tours
 # pour chaque type d'élection et chaque année

@@ -43,6 +43,7 @@ data_sources = {
             ("Code du département", "in", ["57"]),
             ("Code de la commune", "in", ["226"]),
         ],
+        "load": True,
         "url": CANDIDATS_RESULTS_PARQUET_URL,
     },
     "general_results": {
@@ -51,23 +52,28 @@ data_sources = {
             ("Code du département", "in", ["57"]),
             ("Code de la commune", "in", ["226"]),
         ],
+        "load": True,
         "url": GENERAL_RESULTS_PARQUET_URL,
     },
     "nuances": {
         "data_type": "csv",
+        "load": False,
         "url": NUANCES_CSV_URL,
     },
     "schema_candidats_results": {
         "data_type": "json",
+        "load": False,
         "url": SCHEMA_CANDIDATS_RESULTS_JSON_URL,
     },
     "schema_general_results": {
         "data_type": "json",
+        "load": False,
         "url": SCHEMA_GENERAL_RESULTS_JSON_URL,
     },
     "table_bv_reu": {
         "data_type": "parquet",
         "filters": [("code_commune", "in", ["57226"])],
+        "load": False,
         "url": TABLE_BV_REU_PARQUET_URL,
     },
 }
