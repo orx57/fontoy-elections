@@ -111,7 +111,10 @@ for election_id in sorted(
 
 with st.sidebar:
 
-    st.warning("Application en cours de développement...", icon="⚠️")
+    st.warning("""
+               L'application est en pleine évolution...
+               Attendez-vous à de passionnantes nouveautés très prochainement !
+               """, icon="⚠️")
 
     st.markdown("## Sélectionnez une élection")
 
