@@ -74,6 +74,16 @@ def format_election(election_id):
         return f"{election_dict[election]} {year} {round_dict.get(round, '')}".strip()
 
 
+def check_previous_round(id_election, rounds_dict):
+    parts = id_election.split("_")
+    year, election = parts[0], parts[1]
+    round = parts[2] if len(parts) > 2 else None
+
+    if round == 't2' and 't1' in rounds_dict.get((year, election), {}):
+        return True, f"{year}_{election}_t1"
+    else:
+        return False, None
+
 # Titre de l'application
 st.title("Fontoy Élections")
 
@@ -109,8 +119,8 @@ with st.sidebar:
         placeholder="Élections disponibles...",
     )
 
-    if st.session_state.election_id:
-        st.markdown("## " + format_election(st.session_state.election_id))
+    # if st.session_state.election_id:
+    #     st.markdown("## " + format_election(st.session_state.election_id))
 
 # Si une élection est sélectionnée
 if st.session_state.election_id:
@@ -130,6 +140,18 @@ if st.session_state.election_id:
         election_candidats_data = election_candidats_data.dropna(
             axis="columns", how="all"
         )
+
+        is_t2, id_election_t1 = check_previous_round(st.session_state.election_id, rounds_dict)
+        if is_t2:
+            election_general_data_t1 = data["general_results"].loc[
+                data["general_results"]["id_election"] == id_election_t1
+            ]
+            total_inscrits_t1 = election_general_data_t1["Inscrits"].sum()
+            total_abstentions_t1 = election_general_data_t1["Abstentions"].sum()
+            total_votants_t1 = election_general_data_t1["Votants"].sum()
+            total_blancs_t1 = election_general_data_t1["Blancs"].sum()
+            total_nuls_t1 = election_general_data_t1["Nuls"].sum()
+            total_exprimes_t1 = election_general_data_t1["Exprimés"].sum()
 
         # Calcul du totaux
         total_inscrits = election_general_data["Inscrits"].sum()
@@ -151,38 +173,81 @@ if st.session_state.election_id:
                 icon="⚠️",
             )
 
-        with st.container(border=True):
-            col1, col2, col3 = st.columns(3)
-            with col1:
-                st.metric(
-                    label="Inscrits",
-                    value=(total_inscrits),
-                )
-            with col2:
-                st.metric(
-                    label="Abstentions",
-                    value=(total_abstentions),
-                )
-            with col3:
-                st.metric(
-                    label="Votants",
-                    value=(total_votants),
-                )
-            with col1:
-                st.metric(
-                    label="Blancs",
-                    value=(total_blancs),
-                )
-            with col2:
-                st.metric(
-                    label="Nuls",
-                    value=(total_nuls),
-                )
-            with col3:
-                st.metric(
-                    label="Exprimés",
-                    value=(total_exprimes),
-                )
+        if is_t2:
+            with st.container(border=True):
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.metric(
+                        label="Inscrits",
+                        value=(total_inscrits),
+                        delta=(int(total_inscrits) - int(total_inscrits_t1))
+                    )
+                with col2:
+                    st.metric(
+                        label="Abstentions",
+                        value=(total_abstentions),
+                        delta=(int(total_abstentions) - int(total_abstentions_t1))
+                    )
+                with col3:
+                    st.metric(
+                        label="Votants",
+                        value=(total_votants),
+                        delta=(int(total_votants) - int(total_votants_t1))
+                    )
+                with col1:
+                    st.metric(
+                        label="Blancs",
+                        value=(int(total_blancs)),
+                        delta=(int(total_blancs) - int(total_blancs_t1))
+                    )
+                with col2:
+                    st.metric(
+                        label="Nuls",
+                        value=(total_nuls),
+                        delta=(int(total_nuls) - int(total_nuls_t1))
+                    )
+                with col3:
+                    st.metric(
+                        label="Exprimés",
+                        value=(total_exprimes),
+                        delta=(int(total_exprimes) - int(total_exprimes_t1))
+                    )
+        else:
+            with st.container(border=True):
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.metric(
+                        label="Inscrits",
+                        value=(total_inscrits),
+                    )
+                with col2:
+                    st.metric(
+                        label="Abstentions",
+                        value=(total_abstentions),
+                    )
+                with col3:
+                    st.metric(
+                        label="Votants",
+                        value=(total_votants),
+                    )
+                with col1:
+                    st.metric(
+                        label="Blancs",
+                        value=(int(total_blancs)),
+                    )
+                with col2:
+                    st.metric(
+                        label="Nuls",
+                        value=(total_nuls),
+                    )
+                with col3:
+                    st.metric(
+                        label="Exprimés",
+                        value=(total_exprimes),
+                    )
+
+        if is_t2:
+            st.info(f'👆 Les delta par rapport au 1er tours sont affichées.')
 
         base = alt.Chart(election_general_data).encode(
             theta=alt.Theta(field="Inscrits", stack=True, type="quantitative"),
@@ -287,6 +352,17 @@ if st.session_state.election_id:
             # Diagramme à barres du nombre total de votes par sexe
             st.bar_chart(total_voix_sexe)
 
+        st.markdown(
+            """
+            Résultats du 2e tour des #Législatives2024 à Fontoy :
+            - Le taux de participation a atteint 60.11 %, ce qui représente une augmentation de 38 voix par rapport au 1er tour (58.51 %).
+            - Laurent Jacobelli (RN) a gagné 93 voix supplémentaires, soit une augmentation de 13.96 % entre les deux tours. 319 voix de plus qu'en 2022.
+            - Céline Leger (UG) a gagné 212 voix supplémentaires, soit une augmentation de 72.60 % entre les deux tours. 174 voix de plus qu'en 2022.
+            - La différence entre les deux candidats est de 255 voix.
+            - Les bulletins blancs augmentent de 268.75 % entre les deux tours, de 32 à 118.
+            - Les bulletins nuls progressent de 214.29 % entre les deux tours, de 7 à 22.
+            """
+        )
 
 else:
 
