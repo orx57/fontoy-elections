@@ -77,3 +77,16 @@ data_sources = {
         "url": TABLE_BV_REU_PARQUET_URL,
     },
 }
+
+# Constantes pour les élections et les tours
+ELECTION_DICT = {
+    "cant": "Cantonales",
+    "dpmt": "Départementales",
+    "euro": "Européennes",
+    "legi": "Législatives",
+    "muni": "Municipales",
+    "pres": "Présidentielle",
+    "regi": "Régionales",
+}
+
+ROUND_DICT = {"t1": "T1", "t2": "T2"}
