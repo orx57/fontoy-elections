@@ -79,10 +79,11 @@ def check_previous_round(id_election, rounds_dict):
     year, election = parts[0], parts[1]
     round = parts[2] if len(parts) > 2 else None
 
-    if round == 't2' and 't1' in rounds_dict.get((year, election), {}):
+    if round == "t2" and "t1" in rounds_dict.get((year, election), {}):
         return True, f"{year}_{election}_t1"
     else:
         return False, None
+
 
 # Titre de l'application
 st.title("Fontoy Élections")
@@ -106,7 +107,7 @@ for election_id in sorted(
 
 with st.sidebar:
 
-    st.warning('Application en cours de développement...', icon="⚠️")
+    st.warning("Application en cours de développement...", icon="⚠️")
 
     st.markdown("## Sélectionnez une élection")
 
@@ -141,7 +142,9 @@ if st.session_state.election_id:
             axis="columns", how="all"
         )
 
-        is_t2, id_election_t1 = check_previous_round(st.session_state.election_id, rounds_dict)
+        is_t2, id_election_t1 = check_previous_round(
+            st.session_state.election_id, rounds_dict
+        )
         if is_t2:
             election_general_data_t1 = data["general_results"].loc[
                 data["general_results"]["id_election"] == id_election_t1
@@ -180,37 +183,37 @@ if st.session_state.election_id:
                     st.metric(
                         label="Inscrits",
                         value=(total_inscrits),
-                        delta=(int(total_inscrits) - int(total_inscrits_t1))
+                        delta=(int(total_inscrits) - int(total_inscrits_t1)),
                     )
                 with col2:
                     st.metric(
                         label="Abstentions",
                         value=(total_abstentions),
-                        delta=(int(total_abstentions) - int(total_abstentions_t1))
+                        delta=(int(total_abstentions) - int(total_abstentions_t1)),
                     )
                 with col3:
                     st.metric(
                         label="Votants",
                         value=(total_votants),
-                        delta=(int(total_votants) - int(total_votants_t1))
+                        delta=(int(total_votants) - int(total_votants_t1)),
                     )
                 with col1:
                     st.metric(
                         label="Blancs",
                         value=(int(total_blancs)),
-                        delta=(int(total_blancs) - int(total_blancs_t1))
+                        delta=(int(total_blancs) - int(total_blancs_t1)),
                     )
                 with col2:
                     st.metric(
                         label="Nuls",
                         value=(total_nuls),
-                        delta=(int(total_nuls) - int(total_nuls_t1))
+                        delta=(int(total_nuls) - int(total_nuls_t1)),
                     )
                 with col3:
                     st.metric(
                         label="Exprimés",
                         value=(total_exprimes),
-                        delta=(int(total_exprimes) - int(total_exprimes_t1))
+                        delta=(int(total_exprimes) - int(total_exprimes_t1)),
                     )
         else:
             with st.container(border=True):
@@ -247,7 +250,7 @@ if st.session_state.election_id:
                     )
 
         if is_t2:
-            st.info(f'👆 Les delta par rapport au 1er tours sont affichées.')
+            st.info("👆 Les delta par rapport au 1er tours sont affichées.")
 
         base = alt.Chart(election_general_data).encode(
             theta=alt.Theta(field="Inscrits", stack=True, type="quantitative"),
@@ -355,12 +358,19 @@ if st.session_state.election_id:
         st.markdown(
             """
             Résultats du 2e tour des #Législatives2024 à Fontoy :
-            - Le taux de participation a atteint 60.11 %, ce qui représente une augmentation de 38 voix par rapport au 1er tour (58.51 %).
-            - Laurent Jacobelli (RN) a gagné 93 voix supplémentaires, soit une augmentation de 13.96 % entre les deux tours. 319 voix de plus qu'en 2022.
-            - Céline Leger (UG) a gagné 212 voix supplémentaires, soit une augmentation de 72.60 % entre les deux tours. 174 voix de plus qu'en 2022.
+            - Le taux de participation a atteint 60.11 %, ce qui représente
+            une augmentation de 38 voix par rapport au 1er tour (58.51 %).
+            - Laurent Jacobelli (RN) a gagné 93 voix supplémentaires,
+            soit une augmentation de 13.96 % entre les deux tours.
+            319 voix de plus qu'en 2022.
+            - Céline Leger (UG) a gagné 212 voix supplémentaires,
+            soit une augmentation de 72.60 % entre les deux tours.
+            174 voix de plus qu'en 2022.
             - La différence entre les deux candidats est de 255 voix.
-            - Les bulletins blancs augmentent de 268.75 % entre les deux tours, de 32 à 118.
-            - Les bulletins nuls progressent de 214.29 % entre les deux tours, de 7 à 22.
+            - Les bulletins blancs augmentent de 268.75 % entre les deux tours,
+            de 32 à 118.
+            - Les bulletins nuls progressent de 214.29 % entre les deux tours,
+            de 7 à 22.
             """
         )
 
