@@ -274,6 +274,8 @@ if st.session_state.election_id:
                 st.session_state.selected_election_id = id_election_ot
             st.button('Résultats au 2nd tour', on_click=goto_t2)
 
+        st.subheader("Résultats", divider=True)
+
         # base = alt.Chart(election_general_data).encode(
         #     theta=alt.Theta(field="Inscrits", stack=True, type="quantitative"),
         #     color=alt.Color(
