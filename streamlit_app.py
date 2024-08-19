@@ -269,6 +269,64 @@ if st.session_state.election_id:
 
     st.subheader("Résultats", divider=True)
 
+    if (
+        "Nom" in election_candidats_data.columns
+        and "Prénom" in election_candidats_data.columns
+    ):
+        # Création d'une nouvelle colonne 'Candidat·e'
+        election_candidats_data.loc[:, "Candidat·e"] = (
+            election_candidats_data["Nom"] + " " + election_candidats_data["Prénom"]
+        )
+        # Groupement des données par personne
+        group_by_person = election_candidats_data.groupby("Candidat·e")
+        # Aggrégation des données
+        agg_dict = {"Voix": "sum"}
+        if "Sexe" in election_candidats_data.columns:
+            agg_dict["Sexe"] = "first"
+        if "Nuance" in election_candidats_data.columns:
+            agg_dict["Nuance"] = "first"
+        # Calcul du total de voix par personne
+        total_voix_personne = group_by_person.agg(agg_dict)
+        # Calcul du pourcentage de voix par rapport au total exprimé
+        total_voix_personne["% Voix/Exp"] = (
+            total_voix_personne["Voix"] / total_voix_exp * 100
+        ).round(2)
+        st.write(total_voix_personne.sort_values(by="Voix", ascending=False))
+
+        alt.renderers.set_embed_options(format_locale="fr-FR", time_format_locale="fr-FR")
+
+        bars = alt.Chart(
+            election_candidats_data,
+               title=alt.Title(
+                   "Voix par candidat·e et bureau de vote",
+                    # subtitle=["A growing share of the state's energy has come from renewable sources"],
+                    anchor='start',
+                    orient='top',
+                    offset=20,
+                ),
+        ).mark_bar(size=20).encode(
+            x=alt.X('sum(Voix):Q').stack('zero').title('Voix'),
+            y=alt.Y('Candidat·e:N'),
+            color=alt.Color(r'Code du b\.vote').title('Code du bureau de vote').legend(orient="bottom"),
+        ).properties(height=alt.Step(30))
+        text = alt.Chart(election_candidats_data).mark_text(dx=-15, dy=3, color='white').encode(
+            x=alt.X('voix_sum:Q').stack('zero').title('Voix'),
+            y=alt.Y('Candidat·e:N'),
+            detail=alt.Detail('Code du b\.vote:N').title('Code du bureau de vote'),
+            text=alt.Text('voix_sum:Q').title('Voix'),
+            opacity=alt.condition('datum.voix_sum > 30', alt.value(1), alt.value(0)),
+            order=alt.Order('Code du b\.vote').title('Code du bureau de vote'),
+        ).transform_aggregate(
+               voix_sum='sum(Voix)',
+               groupby=[r'Code du b\.vote', 'Candidat·e']
+        )
+
+        chart = bars + text
+
+        container = st.container(border=True)
+
+        container.altair_chart(chart, theme="streamlit", use_container_width=True)
+
 else:
 
     st.info(
