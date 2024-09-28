@@ -327,6 +327,30 @@ if st.session_state.election_id:
 
         container.altair_chart(chart, theme="streamlit", use_container_width=True)
 
+        # Création d'un tableau croisé dynamique pour les pourcentages par bureau de vote
+        pivot_table = pd.pivot_table(
+            election_candidats_data,
+            values='Voix',
+            index=['Candidat·e'],
+            columns=['Code du b.vote'],
+            aggfunc='sum',
+            fill_value=0
+        )
+
+        # Calcul des pourcentages
+        for col in pivot_table.columns:
+            pivot_table[col] = (pivot_table[col] / pivot_table[col].sum() * 100).round(2)
+
+        # Affichage du tableau
+        st.subheader("Pourcentage de voix par candidat·e et par bureau de vote")
+        st.dataframe(
+            pivot_table.style
+            .format("{:.2f}%")
+            .highlight_max(axis=0, props='color:black;background-color:#DAF7A6')
+            .highlight_max(axis=1, props='color:black;background-color:#90EE90')
+            .highlight_max(axis=None, props='color:#FF5733')
+        )
+
 else:
 
     st.info(
