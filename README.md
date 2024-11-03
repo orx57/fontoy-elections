@@ -46,8 +46,6 @@ Ce projet est sous licence Apache - consultez le fichier [LICENSE](LICENSE) pour
 
 Pour toute question ou suggestion, n'hésitez pas à me contacter via GitHub.
 
-[🔝 Retour en haut](#fontoy-elections-)
-
 ---
 
 Développé avec ❤️ par orx57
