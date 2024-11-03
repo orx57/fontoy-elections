@@ -58,11 +58,11 @@ Pour exécuter ce projet localement, suivez ces étapes :
 
 ## Auteurs
 
-- orx57 - Développeur principal
+- [orx57](https://github.com/orx57) - Développeur principal
 
 ## License
 
-Ce projet est sous licence MIT - voir le fichier LICENSE pour plus de détails.
+Ce projet est sous licence Apache - voir le fichier [LICENSE](LICENSE) pour plus de détails.
 
 ## Contact
 
