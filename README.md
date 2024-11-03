@@ -1,69 +1,53 @@
-# Fontoy Elections
+# Fontoy Elections 🗳️
 
-## Description
+Suivi des élections locales de Fontoy  
+Une application simple et intuitive pour suivre les élections locales
 
-Fontoy Elections est une plateforme interactive conçue pour suivre et comprendre les élections au sein de la commune de Fontoy. Bien que l'application soit spécifiquement développée pour cette petite commune, elle est modifiable et peut être adaptée pour d'autres localités. L'objectif est de fournir des informations claires et accessibles sur les processus électoraux locaux, les candidats et les résultats. 
+---
 
-## Accéder à l'application
+> Suivi des élections à Fontoy
 
-Vous pouvez accéder à l'application en ligne ici : [Fontoy Elections](https://fontoy-elections.streamlit.app/)
+Une application Streamlit simple et intuitive pour suivre les élections de la commune de Fontoy !
 
-## Fonctionnalités
+[![Ouvrir dans Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://fontoy-elections.streamlit.app/)
 
-- **Suivi des élections locales** : Accédez aux informations sur les élections à venir et passées à Fontoy.
-- **Analyse des résultats** : Visualisez les résultats des élections de manière interactive.
-- **Contributions ouvertes** : Participez au développement en signalant des bugs ou en proposant des améliorations.
+## Démo
 
-## Comment Contribuer
+Essayez Fontoy Elections directement sur [fontoy-elections.streamlit.app](https://fontoy-elections.streamlit.app/) !
 
-Les contributions sont les bienvenues ! Voici comment vous pouvez aider :
+## À propos
 
-- **Signaler des bugs** : Si vous rencontrez un problème, ouvrez une issue sur GitHub.
-- **Proposer des améliorations** : Vos idées sont précieuses ! N'hésitez pas à soumettre des suggestions.
-- **Participer au développement** : Clonez le dépôt, faites vos modifications et soumettez une pull request.
+> **Note** : Version actuelle : 1.0.0
 
-## Installation
+Fontoy Elections est une application interactive qui permet aux citoyens de suivre les élections locales, d'analyser les résultats et de mieux comprendre le processus électoral. Bien que conçue pour Fontoy, l'application peut être adaptée à d'autres communes.
 
-Pour exécuter ce projet localement, suivez ces étapes :
+### Fonctionnalités actuelles
 
-1. Clonez le dépôt :
-   
-   ```bash
-   git clone https://github.com/orx57/fontoy-elections.git
-   ```
-   
-3. Accédez au répertoire du projet :
-   
-   ```bash
-   cd fontoy-elections
-   ```
-   
-5. Installez les dépendances :
-   
-   ```bash
-   pip install -r requirements.txt
-   ```
-   
-6. Lancez l'application :
-   
-   ```bash
-   streamlit run app.py
-   ```
+- 🗳️ Suivi des élections locales
+- 📊 Visualisation des résultats électoraux
+- 📅 Informations sur les élections passées
+- 🎯 Interface utilisateur intuitive
 
-## Technologies Utilisées
+### Prochainement
 
-- **Streamlit** : Pour créer des applications web interactives.
-- **Python** : Langage de programmation principal.
-- **Pandas** : Pour la manipulation des données.
+- 📈 Statistiques détaillées sur les résultats
 
-## Auteurs
+## Cas d'utilisation
 
-- [orx57](https://github.com/orx57) - Développeur principal
+- Suivre les élections de votre commune
+- Analyser les résultats pour mieux comprendre les tendances électorales
+- Participer activement à la vie démocratique locale
 
-## License
+## Licence
 
-Ce projet est sous licence Apache - voir le fichier [LICENSE](LICENSE) pour plus de détails.
+Ce projet est sous licence Apache - consultez le fichier [LICENSE](LICENSE) pour plus de détails.
 
 ## Contact
 
 Pour toute question ou suggestion, n'hésitez pas à me contacter via GitHub.
+
+[🔝 Retour en haut](#fontoy-elections-)
+
+---
+
+Développé avec ❤️ par orx57
