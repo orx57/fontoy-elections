@@ -57,7 +57,9 @@ def format_election(election_id):
     if len(rounds_info[(year, election)]) == 1:
         return f"{election_dict[election]} {year}"
     else:
-        return f"{election_dict[election]} {year} {round_dict.get(str(round), '')}".strip()
+        return (
+            f"{election_dict[election]} {year} {round_dict.get(str(round), '')}".strip()
+        )
 
 
 # Fonction pour obtenir le tour lié
@@ -79,7 +81,10 @@ st.title("Fontoy Élections")
 
 data = {
     name: load_data(
-        params["url"], params["data_type"], params.get("load", False), params.get("filters")
+        params["url"],
+        params["data_type"],
+        params.get("load", False),
+        params.get("filters"),
     )
     for name, params in constants.data_sources.items()
 }
@@ -295,6 +300,12 @@ if st.session_state.election_id:
             format_locale="fr-FR", time_format_locale="fr-FR"
         )
 
+        # Crée une nouvelle colonne sans point pour Altair
+        election_candidats_data = election_candidats_data.copy()
+        election_candidats_data["Code_du_b_vote"] = election_candidats_data[
+            "Code du b.vote"
+        ]
+
         bars = (
             alt.Chart(
                 election_candidats_data,
@@ -310,7 +321,7 @@ if st.session_state.election_id:
             .encode(
                 x=alt.X("sum(Voix):Q").stack("zero").title("Voix"),
                 y=alt.Y("Candidat·e:N"),
-                color=alt.Color("Code du b.vote")
+                color=alt.Color("Code_du_b_vote")
                 .title("Code du bureau de vote")
                 .legend(orient="bottom"),
             )
@@ -322,18 +333,17 @@ if st.session_state.election_id:
             .encode(
                 x=alt.X("voix_sum:Q").stack("zero").title("Voix"),
                 y=alt.Y("Candidat·e:N"),
-                detail=alt.Detail("Code du b.vote:N").title("Code du bureau de vote"),
+                detail=alt.Detail("Code_du_b_vote:N").title("Code du bureau de vote"),
                 text=alt.Text("voix_sum:Q").title("Voix"),
                 opacity=alt.condition(
                     "datum.voix_sum > 30", alt.value(1), alt.value(0)
                 ),
-                order=alt.Order("Code du b.vote").title("Code du bureau de vote"),
+                order=alt.Order("Code_du_b_vote").title("Code du bureau de vote"),
             )
             .transform_aggregate(
-                voix_sum="sum(Voix)", groupby=["Code du b.vote", "Candidat·e"]
+                voix_sum="sum(Voix)", groupby=["Code_du_b_vote", "Candidat·e"]
             )
         )
-
         chart = bars + text
 
         container = st.container(border=True)
@@ -345,7 +355,7 @@ if st.session_state.election_id:
             election_candidats_data,
             values="Voix",
             index=["Candidat·e"],
-            columns=["Code du b.vote"],
+            columns=["Code_du_b_vote"],
             aggfunc="sum",
             fill_value=0,
         )
