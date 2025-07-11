@@ -95,7 +95,6 @@ for election_id in sorted(
     rounds_info[(year, election)].add(round)
 
 with st.sidebar:
-
     st.warning(
         """
         L'application est en pleine évolution...
@@ -124,7 +123,6 @@ with st.sidebar:
         )
 
 if st.session_state.election_id:
-
     st.subheader(format_election(st.session_state.election_id))
     st.subheader("Participations", divider=True)
 
@@ -293,32 +291,47 @@ if st.session_state.election_id:
         ).round(2)
         st.write(total_voix_personne.sort_values(by="Voix", ascending=False))
 
-        alt.renderers.set_embed_options(format_locale="fr-FR", time_format_locale="fr-FR")
+        alt.renderers.set_embed_options(
+            format_locale="fr-FR", time_format_locale="fr-FR"
+        )
 
-        bars = alt.Chart(
-            election_candidats_data,
-               title=alt.Title(
-                   "Voix par candidat·e et bureau de vote",
+        bars = (
+            alt.Chart(
+                election_candidats_data,
+                title=alt.Title(
+                    "Voix par candidat·e et bureau de vote",
                     # subtitle=["A growing share of the state's energy has come from renewable sources"],
-                    anchor='start',
-                    orient='top',
+                    anchor="start",
+                    orient="top",
                     offset=20,
                 ),
-        ).mark_bar(size=20).encode(
-            x=alt.X('sum(Voix):Q').stack('zero').title('Voix'),
-            y=alt.Y('Candidat·e:N'),
-            color=alt.Color(r'Code du b\.vote').title('Code du bureau de vote').legend(orient="bottom"),
-        ).properties(height=alt.Step(30))
-        text = alt.Chart(election_candidats_data).mark_text(dx=-15, dy=3, color='white').encode(
-            x=alt.X('voix_sum:Q').stack('zero').title('Voix'),
-            y=alt.Y('Candidat·e:N'),
-            detail=alt.Detail('Code du b\.vote:N').title('Code du bureau de vote'),
-            text=alt.Text('voix_sum:Q').title('Voix'),
-            opacity=alt.condition('datum.voix_sum > 30', alt.value(1), alt.value(0)),
-            order=alt.Order('Code du b\.vote').title('Code du bureau de vote'),
-        ).transform_aggregate(
-               voix_sum='sum(Voix)',
-               groupby=[r'Code du b\.vote', 'Candidat·e']
+            )
+            .mark_bar(size=20)
+            .encode(
+                x=alt.X("sum(Voix):Q").stack("zero").title("Voix"),
+                y=alt.Y("Candidat·e:N"),
+                color=alt.Color(r"Code du b\.vote")
+                .title("Code du bureau de vote")
+                .legend(orient="bottom"),
+            )
+            .properties(height=alt.Step(30))
+        )
+        text = (
+            alt.Chart(election_candidats_data)
+            .mark_text(dx=-15, dy=3, color="white")
+            .encode(
+                x=alt.X("voix_sum:Q").stack("zero").title("Voix"),
+                y=alt.Y("Candidat·e:N"),
+                detail=alt.Detail("Code du b\.vote:N").title("Code du bureau de vote"),
+                text=alt.Text("voix_sum:Q").title("Voix"),
+                opacity=alt.condition(
+                    "datum.voix_sum > 30", alt.value(1), alt.value(0)
+                ),
+                order=alt.Order("Code du b\.vote").title("Code du bureau de vote"),
+            )
+            .transform_aggregate(
+                voix_sum="sum(Voix)", groupby=[r"Code du b\.vote", "Candidat·e"]
+            )
         )
 
         chart = bars + text
@@ -330,29 +343,29 @@ if st.session_state.election_id:
         # Création d'un tableau croisé dynamique pour les pourcentages par bureau de vote
         pivot_table = pd.pivot_table(
             election_candidats_data,
-            values='Voix',
-            index=['Candidat·e'],
-            columns=['Code du b.vote'],
-            aggfunc='sum',
-            fill_value=0
+            values="Voix",
+            index=["Candidat·e"],
+            columns=["Code du b.vote"],
+            aggfunc="sum",
+            fill_value=0,
         )
 
         # Calcul des pourcentages
         for col in pivot_table.columns:
-            pivot_table[col] = (pivot_table[col] / pivot_table[col].sum() * 100).round(2)
+            pivot_table[col] = (pivot_table[col] / pivot_table[col].sum() * 100).round(
+                2
+            )
 
         # Affichage du tableau
         st.subheader("Pourcentage de voix par candidat·e et par bureau de vote")
         st.dataframe(
-            pivot_table.style
-            .format("{:.2f}%")
-            .highlight_max(axis=0, props='color:black;background-color:#DAF7A6')
-            .highlight_max(axis=1, props='color:black;background-color:#90EE90')
-            .highlight_max(axis=None, props='color:#FF5733')
+            pivot_table.style.format("{:.2f}%")
+            .highlight_max(axis=0, props="color:black;background-color:#DAF7A6")
+            .highlight_max(axis=1, props="color:black;background-color:#90EE90")
+            .highlight_max(axis=None, props="color:#FF5733")
         )
 
 else:
-
     st.info(
         """
         ### 📢 Aucune élection n'est sélectionnée !
