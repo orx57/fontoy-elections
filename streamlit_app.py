@@ -310,7 +310,7 @@ if st.session_state.election_id:
             .encode(
                 x=alt.X("sum(Voix):Q").stack("zero").title("Voix"),
                 y=alt.Y("Candidat·e:N"),
-                color=alt.Color(r"Code du b\.vote")
+                color=alt.Color("Code du b.vote")
                 .title("Code du bureau de vote")
                 .legend(orient="bottom"),
             )
@@ -322,15 +322,15 @@ if st.session_state.election_id:
             .encode(
                 x=alt.X("voix_sum:Q").stack("zero").title("Voix"),
                 y=alt.Y("Candidat·e:N"),
-                detail=alt.Detail("Code du b\.vote:N").title("Code du bureau de vote"),
+                detail=alt.Detail("Code du b.vote:N").title("Code du bureau de vote"),
                 text=alt.Text("voix_sum:Q").title("Voix"),
                 opacity=alt.condition(
                     "datum.voix_sum > 30", alt.value(1), alt.value(0)
                 ),
-                order=alt.Order("Code du b\.vote").title("Code du bureau de vote"),
+                order=alt.Order("Code du b.vote").title("Code du bureau de vote"),
             )
             .transform_aggregate(
-                voix_sum="sum(Voix)", groupby=[r"Code du b\.vote", "Candidat·e"]
+                voix_sum="sum(Voix)", groupby=["Code du b.vote", "Candidat·e"]
             )
         )
 
