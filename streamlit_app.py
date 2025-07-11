@@ -57,7 +57,7 @@ def format_election(election_id):
     if len(rounds_info[(year, election)]) == 1:
         return f"{election_dict[election]} {year}"
     else:
-        return f"{election_dict[election]} {year} {round_dict.get(round, '')}".strip()
+        return f"{election_dict[election]} {year} {round_dict.get(str(round), '')}".strip()
 
 
 # Fonction pour obtenir le tour lié
@@ -79,7 +79,7 @@ st.title("Fontoy Élections")
 
 data = {
     name: load_data(
-        params["url"], params["data_type"], params.get("load"), params.get("filters")
+        params["url"], params["data_type"], params.get("load", False), params.get("filters")
     )
     for name, params in constants.data_sources.items()
 }
